@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seu feedback | Feira das Profissoes</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <link type="image/png" sizes="16x16" rel="icon" href="assets/img/favicon.png">
+</head>
+<body>
+    <main class="container">
+        <h2 class="identify-user">Identificar-se</h2>
+        <p>Preencha os campos necessarios.</p>  
+        <form id="formid">
+            <div class="input-box">
+                <input type="text" id="nome" placeholder="Seu nome" autocomplete="off" required>
+            </div>
+            <div class="input-box">
+                <input type="text" id="insta" placeholder="Seu instagram (opcional)" autocomplete="off">
+            </div>
+            <button class="login" type="submit">Continuar</button>
+            <p>*Clique apenas uma vez e aguarde*</p>
+        </form>
+    </main>
+    <script>
+        console.log("Javascript funcionando");
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById("formid").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const nome = document.getElementById("nome").value;
+            const insta = document.getElementById("insta").value;
+
+            console.log("Cliquei no botão");
+            console.log("NOME:", nome);
+            console.log("INSTA:", insta);
+
+
+            const resp = await fetch("http://localhost:3000/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nome, insta })
+            });
+
+            const data = await resp.json();
+            console.log(data);
+
+            if (data.userId) {
+                localStorage.setItem("user_id", data.userId);
+
+                window.location.href = "tela1.html";
+            } else {
+                alert("Erro " + data.error);
+            }
+
+            window.location.href = "tela1.html";
+        });
+    </script>
+</body>
+</html>

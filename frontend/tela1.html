@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback | Feira das Profissoes</title>
+    <link rel="stylesheet" href="./assets/tela1.css">
+    <link type="image/png" sizes="16x16" rel="icon" href="assets/img/favicon.png">
+</head>
+<body>
+    <main class="container">
+        <form id="formulario">
+            <h2>Feedback</h2>
+            <div class="input-box">
+                <label for="opiniao">O que achou da Feira das Profissoes?</label><br>
+                <select class="opiniaobox" name="opiniao" id="option" required>
+                    <option value="" disabled selected>--Escolha--</option>
+                    <option value="Ruim">Ruim</option>
+                    <option value="Razoável">Razoável</option>
+                    <option value="Bom">Bom</option>
+                    <option value="Ótimo">Ótimo</option>
+                    <option value="Excelente">Excelente</option>
+                </select>
+            </div>
+        <div class="input-box">
+            <p>Faça um comentário (opcional)</p>
+            <textarea class="comment" name="feedback" id="comment"></textarea>
+        </div>
+        <button class="send" type="submit">Enviar Feedback</button>
+        </form>
+    </main>
+<script src="tela1.js"></script>
+</body>
+</html>
