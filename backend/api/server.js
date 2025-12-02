@@ -91,4 +91,4 @@ app.post("/feedback", async (req, res) => {
 // app.listen(PORT)
 
 // ✅ Exportar como serverless handler
-export const handler = serverless(app);
+module.exports = serverless(app);
