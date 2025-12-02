@@ -4,6 +4,7 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import pg from "pg";
+import serverless from "serverless-http"; // <- ADICIONADO
 
 const { Pool } = pg;
 
@@ -39,7 +40,6 @@ app.post("/register", async (req, res) => {
   const instaFinal = insta && insta.trim() !== "" ? insta.trim() : null;
 
   try {
-    // INSERE E RETORNA O ID DO NOVO USER
     const result = await pool.query(
       "INSERT INTO users (nome, insta) VALUES ($1, $2) RETURNING id;",
       [nome.trim(), instaFinal]
@@ -47,7 +47,7 @@ app.post("/register", async (req, res) => {
 
     const userId = result.rows[0].id;
 
-    return res.json({ message: "Usuário registrado com sucesso", userId})
+    return res.json({ message: "Usuário registrado com sucesso", userId });
 
   } catch (err) {
     console.error("Erro ao registrar usuário:", err);
@@ -60,26 +60,17 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
-
 app.post("/feedback", async (req, res) => {
   const { user_id, option, comment } = req.body;
 
-    if (!user_id) {
+  if (!user_id) {
     return res.status(400).json({ error: "ID do usuário é obrigatório." });
-  }  
-
-  // Validação do nome
-  if (!user_id || user_id.trim() === "") {
-    return res.status(400).json({ error: "O campo user_id é obrigatório." });
   }
 
-  // Validação da opinião
   if (!option || option.trim() === "") {
     return res.status(400).json({ error: "O campo opinião é obrigatório." });
   }
 
-  // Comment é opcional
   const commentFinal = comment && comment.trim() !== "" ? comment.trim() : null;
 
   try {
@@ -92,14 +83,12 @@ app.post("/feedback", async (req, res) => {
 
   } catch (err) {
     console.error("Erro ao registrar feedback:", err);
-
     return res.status(500).json({ error: "Erro interno ao registrar feedback." });
   }
 });
 
+// ❌ Remover app.listen()
+// app.listen(PORT)
 
-// Iniciar servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () =>
-  console.log(`Servidor rodando na porta ${PORT}`)
-);
+// ✅ Exportar como serverless handler
+export const handler = serverless(app);
