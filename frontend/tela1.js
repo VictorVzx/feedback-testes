@@ -20,7 +20,7 @@ form.addEventListener("submit", async (event) => {
     console.log("COMMENT:", comment);
 
     try {
-        const resp = await fetch("http://localhost:3000/feedback", {
+        const resp = await fetch("https://feedback-testes-def.onrender.com/feedback", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ user_id, option, comment })
