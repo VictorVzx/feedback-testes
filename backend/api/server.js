@@ -1,10 +1,12 @@
 import dotenv from "dotenv";
+// Executa o dotenv.config() para carregar variáveis do .env localmente.
+// No Railway, as variáveis serão carregadas diretamente do painel de configuração.
 dotenv.config();
 
 import express from "express";
 import cors from "cors";
 import pg from "pg";
-import serverless from "serverless-http"; // <- ADICIONADO
+// import serverless from "serverless-http"; // <- REMOVIDO: Não é necessário no Railway
 
 const { Pool } = pg;
 
@@ -13,6 +15,7 @@ app.use(express.json());
 app.use(cors());
 
 // Conexão com o banco - Railway
+// Usa as variáveis de ambiente que devem estar configuradas no painel do Railway.
 const pool = new Pool({
   host: process.env.PGHOST,
   user: process.env.PGUSER,
@@ -20,11 +23,12 @@ const pool = new Pool({
   database: process.env.PGDATABASE,
   port: process.env.PGPORT,
   ssl: {
+    // Isso é crucial para o Railway/PostgreSQL e deve ser mantido
     rejectUnauthorized: false
   }
 });
 
-// Teste de conexão
+// Teste de conexão (roda apenas uma vez na inicialização)
 pool.connect()
   .then(() => console.log("Conectado ao PostgreSQL da Railway com sucesso!"))
   .catch(err => console.error("Erro ao conectar no PostgreSQL:", err));
@@ -60,6 +64,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
+// Rota de feedback
 app.post("/feedback", async (req, res) => {
   const { user_id, option, comment } = req.body;
 
@@ -87,8 +92,13 @@ app.post("/feedback", async (req, res) => {
   }
 });
 
-// ❌ Remover app.listen()
-// app.listen(PORT)
+// --------------------------------------------------------
+// ✅ INICIAÇÃO DO SERVIDOR EXPRESS NO RAILWAY
+// --------------------------------------------------------
+// O Railway injeta a porta de ambiente na variável 'PORT'.
+const PORT = process.env.PORT || 3333; 
 
-// ✅ Exportar como serverless handler
-module.exports = serverless(app);
+app.listen(PORT, () => {
+  console.log(`🚀 Backend rodando na porta ${PORT}`);
+});
+// --------------------------------------------------------
